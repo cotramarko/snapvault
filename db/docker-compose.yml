@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: acmedb
+      POSTGRES_USER: acmeuser
+      POSTGRES_PASSWORD: acmepassword
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./schema-and-seed.sql:/docker-entrypoint-initdb.d/schema-and-seed.sql
+    ports:
+      - "5432:5432"
+
+volumes:
+  db-data:
+
