@@ -6,7 +6,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/cotramarko/snapvault/internal/restore"
+	"github.com/cotramarko/snapvault/internal"
 	"github.com/spf13/cobra"
 )
 
@@ -17,7 +17,7 @@ var deleteCmd = &cobra.Command{
 	Long:  ``,
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		snapshots := restore.GetSnapshots()
+		snapshots := internal.GetSnapshots()
 		name := args[0]
 		if snapshots.HasSnapshotWithName(name) {
 			fmt.Printf("Deleting snapshot `%s`\n", name)

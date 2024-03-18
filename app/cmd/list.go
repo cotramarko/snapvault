@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/cotramarko/snapvault/internal/restore"
+	"github.com/cotramarko/snapvault/internal"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"
 
@@ -27,7 +27,7 @@ var listCmd = &cobra.Command{
 			{Name: "Created", AlignHeader: text.AlignCenter, AlignFooter: text.AlignRight},
 			{Name: "Size", AlignHeader: text.AlignRight, Align: text.AlignRight},
 		})
-		snapshots := restore.GetSnapshots()
+		snapshots := internal.GetSnapshots()
 		for _, d := range snapshots {
 			t.AppendRow(table.Row{d.Name, d.Created, fmt.Sprintf("%d MB", d.Size)})
 		}

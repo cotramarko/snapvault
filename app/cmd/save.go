@@ -9,9 +9,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// backupCmd represents the backup command
-var backupCmd = &cobra.Command{
-	Use:   "backup",
+// saveCmd represents the backup command
+var saveCmd = &cobra.Command{
+	Use:   "save",
 	Short: "Create a snapshot",
 	Long:  ``,
 	Args:  cobra.ExactArgs(1),
@@ -21,5 +21,5 @@ var backupCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(backupCmd)
+	rootCmd.AddCommand(saveCmd)
 }
