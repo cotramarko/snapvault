@@ -6,7 +6,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/cotramarko/snapvault/internal"
+	"github.com/cotramarko/snapvault/internal/commands"
+	"github.com/cotramarko/snapvault/internal/config"
 	"github.com/spf13/cobra"
 )
 
@@ -17,11 +18,10 @@ var restoreCmd = &cobra.Command{
 	Long:  ``,
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		snapshots := internal.GetSnapshots()
-		if snapshots.HasSnapshotWithName(args[0]) {
-			fmt.Println("Restoring snapshot", args[0])
-		} else {
-			fmt.Println("Snapshot", args[0], "does not exist")
+		engine := config.GetDefaultEngine()
+		err := commands.Restore(*engine, args[0])
+		if err != nil {
+			fmt.Println(err)
 		}
 	},
 }

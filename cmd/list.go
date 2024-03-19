@@ -6,8 +6,10 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"time"
 
-	"github.com/cotramarko/snapvault/internal"
+	"github.com/cotramarko/snapvault/internal/commands"
+	"github.com/cotramarko/snapvault/internal/config"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"
 
@@ -27,15 +29,21 @@ var listCmd = &cobra.Command{
 			{Name: "Created", AlignHeader: text.AlignCenter, AlignFooter: text.AlignRight},
 			{Name: "Size", AlignHeader: text.AlignRight, Align: text.AlignRight},
 		})
-		snapshots := internal.GetSnapshots()
+
+		engine := config.GetDefaultEngine()
+		snapshots, err := commands.List(*engine)
+
+		if err != nil {
+			panic(err)
+		}
 		for _, d := range snapshots {
-			t.AppendRow(table.Row{d.Name, d.Created, fmt.Sprintf("%d MB", d.Size)})
+			t.AppendRow(table.Row{d, time.Now().Format("2006-01-02 15:04:05"), fmt.Sprintf("%d MB", 0)})
 		}
 		t.AppendSeparator()
 		t.AppendFooter(table.Row{
 			"",
 			"Total",
-			fmt.Sprintf("%d MB", snapshots.TotalSize()),
+			fmt.Sprintf("%d MB", 0),
 		})
 		t.SetStyle(table.StyleRounded)
 		t.Render()

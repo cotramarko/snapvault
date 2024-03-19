@@ -6,7 +6,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/cotramarko/snapvault/internal"
+	"github.com/cotramarko/snapvault/internal/commands"
+	"github.com/cotramarko/snapvault/internal/config"
 	"github.com/spf13/cobra"
 )
 
@@ -17,12 +18,10 @@ var deleteCmd = &cobra.Command{
 	Long:  ``,
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		snapshots := internal.GetSnapshots()
-		name := args[0]
-		if snapshots.HasSnapshotWithName(name) {
-			fmt.Printf("Deleting snapshot `%s`\n", name)
-		} else {
-			fmt.Printf("Snapshot `%s` does not exist\n", name)
+		engine := config.GetDefaultEngine()
+		err := commands.Delete(*engine, args[0])
+		if err != nil {
+			fmt.Println(err)
 		}
 	},
 }
