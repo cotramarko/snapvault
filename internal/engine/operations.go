@@ -54,13 +54,40 @@ func (d *Engine) CreateFromSnap(snapName string) (int64, error) {
 	return res.RowsAffected()
 }
 
-func (d *Engine) Drop() (int64, error) {
-	execString := fmt.Sprintf("DROP DATABASE %s;", d.config.Name)
+func (d *Engine) Drop(name string) (int64, error) {
+	execString := fmt.Sprintf("DROP DATABASE %s;", name)
 	res, err := d.db.Exec(execString)
 	if err != nil {
 		return 0, err
 	}
 	return res.RowsAffected()
+}
+
+func (d *Engine) GetSnapshots() ([]string, error) {
+	rows, err := d.db.Query(`
+	SELECT 
+		regexp_substr(datname, '^[^_]+(?=_)'),
+		pg_size_pretty(pg_database_size(pg_database.datname)), 
+		(pg_stat_file('base/'|| oid ||'/PG_VERSION')).modification AS "created"
+	FROM pg_database
+		WHERE datname LIKE '%\_%'
+	ORDER BY "created" DESC
+	`)
+	if err != nil {
+		return nil, err
+	}
+
+	var snaps []string
+	for rows.Next() {
+		var name string
+		var size string
+		var created string
+		if err := rows.Scan(&name, &size, &created); err != nil {
+			return nil, err
+		}
+		snaps = append(snaps, name)
+	}
+	return snaps, nil
 }
 
 func (d *Engine) GetSnap(snapName string) (string, error) {
