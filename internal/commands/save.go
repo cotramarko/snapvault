@@ -1,38 +1,34 @@
 package commands
 
 import (
-	"fmt"
 	"log/slog"
-	"time"
 
 	"github.com/cotramarko/snapvault/internal/engine"
 )
 
-func Save(db engine.Engine, saveName string) error {
-	nameWithTS := fmt.Sprintf("%s_%s", saveName, time.Now().Format("20060102150405"))
-
-	if err := db.Connect(); err != nil {
+func Save(e engine.Engine, snapName engine.SnapName) error {
+	if err := e.Connect(); err != nil {
 		slog.Error("Failed to connect to database: %v\n", err)
 		return err
 	}
 
-	_, err := db.TerminateConnections()
+	_, err := e.TerminateConnections()
 	if err != nil {
 		slog.Error("Failed to terminate connections: %v\n", err)
 		return err
 	}
 
-	_, err = db.EnableTemplate()
+	_, err = e.EnableTemplate()
 	if err != nil {
 		slog.Error("Failed to enable template: %v\n", err)
 		return err
 	}
 
-	_, err = db.Snap(nameWithTS)
+	_, err = e.Snap(snapName)
 	if err != nil {
 		slog.Error("Failed to create snapshot: %v\n", err)
 		return err
 	}
 
-	return db.Close()
+	return e.Close()
 }

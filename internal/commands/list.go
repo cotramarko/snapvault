@@ -6,11 +6,11 @@ import (
 	"github.com/cotramarko/snapvault/internal/engine"
 )
 
-func List(db engine.Engine) ([]string, error) {
-	if err := db.Connect(); err != nil {
+func List(e engine.Engine) ([]engine.SnapInfo, error) {
+	if err := e.Connect(); err != nil {
 		slog.Error("Failed to connect to database: %v\n", err)
 		return nil, err
 	}
 
-	return db.GetSnapshots()
+	return e.GetSnapshots()
 }

@@ -6,6 +6,7 @@ package cmd
 import (
 	"os"
 
+	"github.com/cotramarko/snapvault/internal/engine"
 	"github.com/spf13/cobra"
 )
 
@@ -33,14 +34,30 @@ func Execute() {
 	}
 }
 
+type Flag string
+
+const (
+	URL Flag = "url"
+)
+
 func init() {
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
 	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.snapvault.yaml)")
+	rootCmd.PersistentFlags().String(string(URL), "", "url to database")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+func Engine(cmd *cobra.Command) *engine.Engine {
+	url, err := cmd.Flags().GetString(string(URL))
+	if err == nil && url != "" {
+		return engine.DirectEngine(url)
+	}
+	path, _ := os.Getwd()
+	return engine.LoadEngine(path)
 }
