@@ -15,14 +15,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-
+    
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
         go-version: '1.21'
-
+    
     - name: Build
       run: go build -v ./...
-
-#    - name: Test
-#      run: go test -v ./...
+    
+    - name: Test
+      run: |
+        cd db/
+        docker-compose up -d
+        cd ..
+        go test -v ./...
+    
+    - name: Stop Docker Compose services
+      if: always()
+      run: |
+        cd db/
+        docker-compose down -v
