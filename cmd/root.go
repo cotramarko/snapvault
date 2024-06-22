@@ -16,7 +16,7 @@ var rootCmd = &cobra.Command{
 	Short: "A PostgreSQL backup tool for capturing and restoring snapshots of your database.",
 	Long: `A PostgreSQL backup tool for capturing and restoring snapshots of your database.
 
-THe snapvault CLI tool is intended to be used during local development as an easy way to capture
+The snapvault CLI tool is intended to be used during local development as an easy way to capture
 and restore snapshots of the database, making it possible to quickly restore the database to a
 previous state. It supports basic commands such as "save", "restore", "list" and "delete".
 
