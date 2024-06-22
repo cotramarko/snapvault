@@ -23,6 +23,7 @@ var restoreCmd = &cobra.Command{
 		err := commands.Restore(*e, snapName)
 		if err != nil {
 			fmt.Println(err)
+			return
 		}
 		fmt.Println("Restored snapshot", args[0])
 	},

@@ -23,6 +23,7 @@ var deleteCmd = &cobra.Command{
 		err := commands.Delete(*e, snapName)
 		if err != nil {
 			fmt.Println(err)
+			return
 		}
 		fmt.Println("Deleted snapshot", args[0])
 	},

@@ -4,6 +4,7 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/cotramarko/snapvault/internal/commands"
@@ -20,6 +21,14 @@ var listCmd = &cobra.Command{
 	Short: "List snapshots",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
+		e := Engine(cmd)
+		snapshots, err := commands.List(*e)
+
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
 		t := table.NewWriter()
 		t.SetOutputMirror(os.Stdout)
 		t.AppendHeader(table.Row{"Name", "Created", "Size"})
@@ -28,12 +37,6 @@ var listCmd = &cobra.Command{
 			{Name: "Size", AlignHeader: text.AlignRight, Align: text.AlignRight},
 		})
 
-		e := Engine(cmd)
-		snapshots, err := commands.List(*e)
-
-		if err != nil {
-			panic(err)
-		}
 		for _, d := range snapshots {
 			t.AppendRow(table.Row{d.SnapName, d.Created, d.Size})
 		}
