@@ -2,6 +2,7 @@ package engine
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 
 	_ "github.com/lib/pq"
@@ -142,10 +143,13 @@ func (d *Engine) GetSnap(snapName SnapName) (DBname, error) {
 
 	var fullDbName string
 	for rows.Next() {
-		if err := rows.Scan(&fullDbName); err != nil {
+		if err = rows.Scan(&fullDbName); err != nil {
 			return "", err
 		}
 	}
 
+	if fullDbName == "" {
+		return "", errors.New(fmt.Sprintf("Could not find snapshot with name %v", snapName))
+	}
 	return DBname(fullDbName), nil
 }
