@@ -24,3 +24,4 @@ go.work
 *.vscode/
 snapvault
 **/.DS_Store
+*.idea/
