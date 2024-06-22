@@ -54,6 +54,6 @@ signs:
 brews:
   - name: snapvault
     homepage: https://github.com/cotramarko/homebrew-tools
-    tap:
+    repository:
       owner: cotramarko
       name: homebrew-tools
