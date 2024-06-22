@@ -22,6 +22,7 @@ builds:
       - linux
       - windows
       - darwin
+    binary: snapvault
 
 archives:
   - format: tar.gz

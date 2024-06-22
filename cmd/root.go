@@ -12,14 +12,21 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "sv",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Use:   "snapvault",
+	Short: "A PostgreSQL backup tool for capturing and restoring snapshots of your database.",
+	Long: `A PostgreSQL backup tool for capturing and restoring snapshots of your database.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+THe snapvault CLI tool is intended to be used during local development as an easy way to capture
+and restore snapshots of the database, making it possible to quickly restore the database to a
+previous state. It supports basic commands such as "save", "restore", "list" and "delete".
+
+The database URL can be specified in multiple ways. Either by a snapvault.toml file
+(containing url=<connection-string>), or by setting the environment variable
+$DATABASE_URL=<connection-string>, or by passing it as a flag via --url=<connection-string>.
+ 
+The --url flag will always override any of the other ways of specifying the URL. If both a 
+snapvault.toml file is present and $DATABASE_URL is set, then the sv.toml file will be prioritised.
+`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },

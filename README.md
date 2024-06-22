@@ -4,7 +4,7 @@ A PostgreSQL backup tool that effortlessly captures and restores precise snapsho
 
 ## Usage
 ```shell
-$ snapvault save <snapshot_name> 
+$ snapvault save <snapshot_name> 
 ```
 ```shell
 $ snapvault restore <snapshot_name>
