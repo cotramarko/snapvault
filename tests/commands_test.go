@@ -25,13 +25,13 @@ func TestCoreCommands(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	t.Log("Saved fresh")
+	t.Log("Saved `fresh`")
 
 	err = commands.Restore(*e, "fresh")
 	if err != nil {
 		t.Error(err)
 	}
-	t.Log("Restored fresh")
+	t.Log("Restored `fresh`")
 
 	res, err := commands.List(*e)
 	if len(res) != 1 {
@@ -47,5 +47,5 @@ func TestCoreCommands(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	t.Log("Deleted fresh")
+	t.Log("Deleted `fresh`")
 }

@@ -17,7 +17,7 @@ type DBConfig struct {
 }
 
 const ENV_NAME = "DATABASE_URL"
-const TOML_FILE_NAME = "sv.toml"
+const TOML_FILE_NAME = "snapvault.toml"
 
 func configFromEnv() (config DBConfig, exists bool) {
 	val, exists := os.LookupEnv(ENV_NAME)
