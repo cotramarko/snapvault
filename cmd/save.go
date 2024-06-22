@@ -24,7 +24,9 @@ var saveCmd = &cobra.Command{
 		err := commands.Save(*e, snapName)
 		if err != nil {
 			fmt.Println(err)
+			return
 		}
+		fmt.Println("snapshot created")
 	},
 }
 
