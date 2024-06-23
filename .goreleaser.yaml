@@ -25,7 +25,7 @@ builds:
     binary: snapvault
 
 archives:
-  - format: tar.gz
+  - format: binary
     # this name template makes the OS and Arch compatible with the results of `uname`.
     name_template: >-
       {{ .ProjectName }}_
