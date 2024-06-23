@@ -18,7 +18,6 @@ var saveCmd = &cobra.Command{
 	Long:  ``,
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Creating snapshot", args[0])
 		e := Engine(cmd)
 		snapName := engine.SnapName(args[0])
 		err := commands.Save(*e, snapName)
@@ -26,7 +25,7 @@ var saveCmd = &cobra.Command{
 			fmt.Println(err)
 			return
 		}
-		fmt.Println("snapshot created")
+		fmt.Println("Created snapshot", args[0])
 	},
 }
 

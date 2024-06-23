@@ -25,7 +25,7 @@ The database URL can be specified in multiple ways. Either by a snapvault.toml f
 $DATABASE_URL=<connection-string>, or by passing it as a flag via --url=<connection-string>.
  
 The --url flag will always override any of the other ways of specifying the URL. If both a 
-snapvault.toml file is present and $DATABASE_URL is set, then the sv.toml file will be prioritised.
+snapvault.toml file is present and $DATABASE_URL is set, then the snapvault.toml file will be prioritised.
 `,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
