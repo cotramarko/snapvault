@@ -4,7 +4,7 @@ A PostgreSQL backup tool that effortlessly captures and restores precise snapsho
 ___
 **⚠️ Note:** This tool is designed for use during development and should not be used in production.
 ## 📸 Why Snapvault?
-The snapvault CLI tool is intended to be used during local development as an easy way to capture and restore snapshots of the database, making it possible to quickly restore the database to a previous state. It supports basic commands such as `save`, `restore`, `list` and `delete`:
+The snapvault CLI tool is intended to be used during local development as an easy way to capture and restore snapshots of the database, making it possible to quickly restore the database to a previous state. It uses the [template](https://www.postgresql.org/docs/current/manage-ag-templatedbs.html) functionality in Postgres to create clones of databases, which is faster than using `pg_dump`/`pg_restore`. It supports basic commands such as `save`, `restore`, `list` and `delete`:
 
 ```shell
 $ snapvault save <snapshot_name> 
