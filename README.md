@@ -4,7 +4,11 @@ A PostgreSQL backup tool that effortlessly captures and restores precise snapsho
 ___
 **⚠️ Note:** This tool is designed for use during development and should not be used in production.
 ## 📸 Why Snapvault?
-The snapvault CLI tool is intended to be used during local development as an easy way to capture and restore snapshots of the database, making it possible to quickly restore the database to a previous state. It uses the [template](https://www.postgresql.org/docs/current/manage-ag-templatedbs.html) functionality in Postgres to create clones of databases, which is faster than using `pg_dump`/`pg_restore`. It supports basic commands such as `save`, `restore`, `list` and `delete`:
+The snapvault CLI tool is intended to be used during local development as an easy way to capture and restore snapshots of the database, making it possible to quickly restore the database to a previous state. 
+
+It uses the [template](https://www.postgresql.org/docs/current/manage-ag-templatedbs.html) functionality in Postgres to create clones of databases, which is faster than using `pg_dump`/`pg_restore`. This means that all clones are actually stored as separate databases on the same Postgres server as the original database.
+
+It supports basic commands such as `save`, `restore`, `list` and `delete`:
 
 ```shell
 $ snapvault save <snapshot_name> 
@@ -13,7 +17,7 @@ $ snapvault list
 $ snapvault delete <snapshot_name>
 ```
 
-Snapvault is similar to projects like [DLSR](https://github.com/mixxorz/DSLR) and [Stellar](https://github.com/fastmonkeys/stellar). However, unlike those projects snapvault is written in Go and delivered as a standalone binary, making it possible to use the tool without having to rely on Python or managing any other dependencies. 
+Snapvault is similar to projects like [DLSR](https://github.com/mixxorz/DSLR) and [Stellar](https://github.com/fastmonkeys/stellar). However, unlike those projects snapvault is written in Go and delivered as a standalone binary, making it possible to use the tool without having to rely on Python or managing any other dependencies.  
 
 ## ⚙️ Installation
 Binaries are available in both Intel and ARM versions for OSX/Darwin, Linux and Windows and can be found under the [Releases](https://github.com/cotramarko/snapvault/releases) section.
@@ -24,10 +28,20 @@ Binaries are available in both Intel and ARM versions for OSX/Darwin, Linux and 
 ```shell
 # Change binary depending on your platform
 # Linux: 
-#   snapvault_Linux_arm64 snapvault_Linux_i386 snapvault_Linux_x86_64
+#   snapvault_Linux_arm64
+#   snapvault_Linux_i386
+#   snapvault_Linux_x86_64
 # OSX:
-#   snapvault_Darwin_arm64 snapvault_Darwin_x86_64
+#   snapvault_Darwin_arm64
+#   snapvault_Darwin_x86_64
+
+# Bash:
 $ TARGET=snapvault_Darwin_x86_64
+# Fish:
+$ set TARGET snapvault_Darwin_x86_64
+```
+```shell
+# Download binary and make it executable
 $ sudo curl -fsSL -o /usr/local/bin/snapvault https://github.com/cotramarko/snapvault/releases/latest/download/$TARGET
 $ sudo chmod +x /usr/local/bin/snapvault
 ```
@@ -36,7 +50,7 @@ $ sudo chmod +x /usr/local/bin/snapvault
 
 [Download and unzip the archive](https://github.com/cotramarko/snapvault/releases) for your target platform. The unzipped archive contains an `.exe` of the binary.  
 
-### Using `brew`
+### Using Homebrew
 ```shell
 $ brew tap cotramarko/tools
 $ brew install snapvault
@@ -89,6 +103,3 @@ $ snapvault list
 $ snapvault delete fix/foobar
 Deleted snapshot fix/foobar
 ```
-
-## 🔧 How Does it Work?
-
