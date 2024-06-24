@@ -19,12 +19,23 @@ Snapvault is similar to projects like [DLSR](https://github.com/mixxorz/DSLR) an
 Binaries are available in both Intel and ARM versions for OSX/Darwin, Linux and Windows and can be found under the [Releases](https://github.com/cotramarko/snapvault/releases) section.
 
 ### Manual Download
+
+**OSX/Darwin & Linux**
 ```shell
 # Change binary depending on your platform
+# Linux: 
+#   snapvault_Linux_arm64 snapvault_Linux_i386 snapvault_Linux_x86_64
+# OSX:
+#   snapvault_Darwin_arm64 snapvault_Darwin_x86_64
 $ TARGET=snapvault_Darwin_x86_64
 $ sudo curl -fsSL -o /usr/local/bin/snapvault https://github.com/cotramarko/snapvault/releases/latest/download/$TARGET
 $ sudo chmod +x /usr/local/bin/snapvault
 ```
+
+**Windows**
+
+[Download and unzip the archive](https://github.com/cotramarko/snapvault/releases) for your target platform. The unzipped archive contains an `.exe` of the binary.  
+
 ### Using `brew`
 ```shell
 $ brew tap cotramarko/tools
@@ -33,13 +44,32 @@ $ brew install snapvault
 
 ## 🔧 How to Use Snapvault
 
-### Specifying Database
-The database URL can be specified in multiple ways. Either by a `snapvault.toml` file
-(containing `url=<connection-string>`), or by setting the environment variable
-`$DATABASE_URL=<connection-string>`, or by passing it as a flag via `--url=<connection-string>`.
+### Providing Database URL
+The database URL can be provided in multiple ways
 
-The `--url` flag will always override any of the other ways of specifying the URL. If both a
-`snapvault.toml` file is present and `$DATABASE_URL` is set, then the `snapvault.toml` file will be prioritised.
+#### Option 1 - Using a `snapvault.toml` file
+Create a `snapvault.toml` file containing the database URL 
+```toml
+url = "postgres://acmeuser:acmepassword@localhost:5432/acmedb"
+```
+The URL will be used whenever `snapvault` is in the same directory as the file.
+
+#### Option 2 - Setting the `DATABASE_URL` environment variable
+Another option is to set the `DATABASE_URL` environment variable to the database URL
+```shell
+# Bash:
+$ export DATABASE_URL=postgres://acmeuser:acmepassword@localhost:5432/acmedb
+# Fish:
+$ set -x DATABASE_URL postgres://acmeuser:acmepassword@localhost:5432/acmedb
+```
+If both the `DATABASE_URL` is set and a `snapvault.toml` file is present then the `snapvault.toml` file will be preferred.   
+
+#### Option 3 - Passing it explicitly with `--url` flag
+Another option is to explicitly pass the database URL with the `--url` flag whenever running a snapvault command
+```shell
+$ snapvault list --url=postgres://acmeuser:acmepassword@localhost:5432/acmedb
+```
+The `--url` flag will always override any of the other ways of specifying the URL.
 
 ### Basic Commands
 ```shell
@@ -59,3 +89,6 @@ $ snapvault list
 $ snapvault delete fix/foobar
 Deleted snapshot fix/foobar
 ```
+
+## 🔧 How Does it Work?
+
