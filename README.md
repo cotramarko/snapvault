@@ -1,6 +1,6 @@
 # Snapvault 
 ![snapvault](snapvault.webp)
-A PostgreSQL backup tool that effortlessly captures and restores precise snapshots of your database.
+A PostgreSQL snapshot tool that effortlessly captures and restores precise snapshots of your database.
 ___
 **⚠️ Note:** This tool is designed for use during development and should not be used in production.
 ## 📸 Why Snapvault?
