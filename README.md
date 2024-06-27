@@ -22,6 +22,12 @@ Snapvault is similar to projects like [DLSR](https://github.com/mixxorz/DSLR) an
 ## ⚙️ Installation
 Binaries are available in both Intel and ARM versions for OSX/Darwin, Linux and Windows and can be found under the [Releases](https://github.com/cotramarko/snapvault/releases) section.
 
+### Using Homebrew
+```shell
+$ brew tap cotramarko/tools
+$ brew install snapvault
+```
+
 ### Manual Download
 
 **OSX/Darwin & Linux**
@@ -49,12 +55,6 @@ $ sudo chmod +x /usr/local/bin/snapvault
 **Windows**
 
 [Download and unzip the archive](https://github.com/cotramarko/snapvault/releases) for your target platform. The unzipped archive contains an `.exe` of the binary.  
-
-### Using Homebrew
-```shell
-$ brew tap cotramarko/tools
-$ brew install snapvault
-```
 
 ## 🔧 How to Use Snapvault
 
