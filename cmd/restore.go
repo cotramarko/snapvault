@@ -18,9 +18,13 @@ var restoreCmd = &cobra.Command{
 	Long:  ``,
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		e := Engine(cmd)
+		e, err := Engine(cmd)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 		snapName := engine.SnapName(args[0])
-		err := commands.Restore(*e, snapName)
+		err = commands.Restore(*e, snapName)
 		if err != nil {
 			fmt.Println(err)
 			return
