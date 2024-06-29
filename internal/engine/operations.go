@@ -104,7 +104,7 @@ func (d *Engine) GetSnapshots() ([]SnapInfo, error) {
 	FROM pg_database
 		WHERE datname LIKE $1
 	ORDER BY "created" DESC
-	`, "%"+DB_NAME_SUFFIX)
+	`, "%"+DbNameSuffix)
 	if err != nil {
 		return nil, err
 	}
