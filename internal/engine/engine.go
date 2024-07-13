@@ -2,6 +2,8 @@ package engine
 
 import (
 	"database/sql"
+	"fmt"
+	"github.com/cotramarko/snapvault/internal/connection"
 )
 
 type Engine struct {
@@ -9,30 +11,33 @@ type Engine struct {
 	db     *sql.DB
 }
 
-func (e *Engine) GetName() string {
-	return e.config.Name
-}
-
-func new(config DBConfig) *Engine {
+func newEngine(config DBConfig) *Engine {
 	return &Engine{config: config}
 }
 
-func DirectEngine(url string) *Engine {
-	return new(configFromURL(url))
+func DirectEngine(url string) (*Engine, error) {
+	config, err := configFromURL(url)
+	if err != nil {
+		return nil, err
+	}
+	return newEngine(config), nil
 }
 
-func LoadEngine(dir string) *Engine {
+func LoadEngine(dir string) (*Engine, error) {
 	var (
+		url    connection.URL
 		config DBConfig
-		exists bool
+		err    error
 	)
-	config, exists = configFromTOML(dir)
-	if exists {
-		return new(config)
+
+	url, err = connection.ProvideURL(dir)
+	if err != nil {
+		return nil, err
 	}
-	config, exists = configFromEnv()
-	if exists {
-		return new(config)
+	config, err = configFromURL(url.URL)
+	if err != nil {
+		return nil, fmt.Errorf("(%s) %v", url.Provider, err)
 	}
-	panic("No database configuration found")
+	return newEngine(config), nil
+
 }

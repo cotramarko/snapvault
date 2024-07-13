@@ -10,8 +10,11 @@ import (
 // Integration test, requires DB via docker-compose to be running
 func setupTest() *engine.Engine {
 	url := "postgres://acmeuser:acmepassword@localhost:5432/acmedb"
-	e := engine.DirectEngine(url)
-	err := e.Connect()
+	e, err := engine.DirectEngine(url)
+	if err != nil {
+		panic(err)
+	}
+	err = e.Connect()
 	if err != nil {
 		panic(err)
 	}

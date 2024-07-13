@@ -10,10 +10,10 @@ func Test_configFromURL(t *testing.T) {
 		url string
 	}
 	tests := []struct {
-		name        string
-		args        args
-		want        DBConfig
-		shouldPanic bool
+		name      string
+		args      args
+		want      DBConfig
+		shouldErr bool
 	}{
 		{
 			name: "should parse valid connection string",
@@ -27,36 +27,36 @@ func Test_configFromURL(t *testing.T) {
 				Port:     "port",
 				Name:     "dbname",
 			},
-			shouldPanic: false,
+			shouldErr: false,
 		},
 		{
-			name: "should panic for incorrect connection string",
+			name: "should err for incorrect connection string",
 			args: args{
 				url: "postgres://user:pass@host:port",
 			},
-			want:        DBConfig{},
-			shouldPanic: true,
+			want:      DBConfig{},
+			shouldErr: true,
 		},
 		{
-			name: "should panic for empty connection string",
+			name: "should err for empty connection string",
 			args: args{
 				url: "",
 			},
-			want:        DBConfig{},
-			shouldPanic: true,
+			want:      DBConfig{},
+			shouldErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if tt.shouldPanic {
-				defer func() {
-					if r := recover(); r == nil {
-						t.Errorf("The code did not panic")
-					}
-				}()
-			}
-			if got := configFromURL(tt.args.url); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("configFromURL() = %v, want %v", got, tt.want)
+			got, err := configFromURL(tt.args.url)
+			if tt.shouldErr {
+				if err == nil {
+					t.Errorf("configFromURL() should have returned err")
+				}
+			} else {
+				if !reflect.DeepEqual(tt.want, got) {
+					t.Errorf("configFromURL() got = %v, want %v", got, tt.want)
+				}
 			}
 		})
 	}

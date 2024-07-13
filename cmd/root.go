@@ -1,6 +1,3 @@
-/*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -60,7 +57,7 @@ func init() {
 	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
-func Engine(cmd *cobra.Command) *engine.Engine {
+func Engine(cmd *cobra.Command) (*engine.Engine, error) {
 	url, err := cmd.Flags().GetString(string(URL))
 	if err == nil && url != "" {
 		return engine.DirectEngine(url)

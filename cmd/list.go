@@ -1,6 +1,3 @@
-/*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -21,7 +18,11 @@ var listCmd = &cobra.Command{
 	Short: "List snapshots",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		e := Engine(cmd)
+		e, err := Engine(cmd)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 		snapshots, err := commands.List(*e)
 
 		if err != nil {

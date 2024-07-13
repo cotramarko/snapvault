@@ -104,7 +104,7 @@ func (d *Engine) GetSnapshots() ([]SnapInfo, error) {
 	FROM pg_database
 		WHERE datname LIKE $1
 	ORDER BY "created" DESC
-	`, "%"+DB_NAME_SUFFIX)
+	`, "%"+DbNameSuffix)
 	if err != nil {
 		return nil, err
 	}
@@ -114,7 +114,7 @@ func (d *Engine) GetSnapshots() ([]SnapInfo, error) {
 		var dbName string
 		var size string
 		var created string
-		if err := rows.Scan(&dbName, &size, &created); err != nil {
+		if err = rows.Scan(&dbName, &size, &created); err != nil {
 			return nil, err
 		}
 		snaps = append(snaps, SnapInfo{
@@ -152,4 +152,8 @@ func (d *Engine) GetSnap(snapName SnapName) (DBname, error) {
 		return "", errors.New(fmt.Sprintf("Could not find snapshot with name %v", snapName))
 	}
 	return DBname(fullDbName), nil
+}
+
+func (e *Engine) GetName() string {
+	return e.config.Name
 }
