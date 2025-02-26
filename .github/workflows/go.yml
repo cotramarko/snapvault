@@ -37,7 +37,7 @@ jobs:
     - name: Start Docker Compose services
       run: |
         cd db/
-        docker-compose up -d
+        docker compose up -d
 
     - name: Run tests
       run: go test -v ./...
@@ -46,4 +46,4 @@ jobs:
       if: always()
       run: |
         cd db/
-        docker-compose down -v
+        docker compose down -v
