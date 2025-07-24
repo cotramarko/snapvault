@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	_ "github.com/lib/pq"
+	"github.com/lib/pq"
 )
 
 func (e *Engine) Connect() error {
@@ -62,20 +62,44 @@ func (d *Engine) DisableTemplate() (int64, error) {
 
 func (d *Engine) Snap(snapName SnapName) (int64, error) {
 	dbName := ToDBname(snapName)
-	execString := fmt.Sprintf(`CREATE DATABASE "%s" TEMPLATE "%s";`, dbName, d.config.Name)
-	res, err := d.db.Exec(execString)
+
+	description, err := d.GetCommentForDatabase(d.config.Name)
 	if err != nil {
 		return 0, err
 	}
-	return res.RowsAffected()
+
+	execString := fmt.Sprintf(`CREATE DATABASE "%s" TEMPLATE "%s";`, dbName, d.config.Name)
+	createRes, err := d.db.Exec(execString)
+	if err != nil {
+		return 0, err
+	}
+	if description != nil {
+		err = d.WriteCommentForDBName(dbName, *description)
+		if err != nil {
+			return 0, err
+		}
+	}
+	return createRes.RowsAffected()
 }
 
 func (d *Engine) CreateFromSnap(snapName SnapName) (int64, error) {
 	dbName := ToDBname(snapName)
+	description, err := d.GetCommentForDBName(dbName)
+	if err != nil {
+		return 0, err
+	}
+
 	execString := fmt.Sprintf(`CREATE DATABASE "%s" TEMPLATE "%s";`, d.config.Name, dbName)
 	res, err := d.db.Exec(execString)
 	if err != nil {
 		return 0, err
+	}
+
+	if description != nil {
+		err = d.WriteCommentForDatabase(d.config.Name, *description)
+		if err != nil {
+			return 0, err
+		}
 	}
 	return res.RowsAffected()
 }
@@ -97,9 +121,9 @@ type SnapInfo struct {
 
 func (d *Engine) GetSnapshots() ([]SnapInfo, error) {
 	rows, err := d.db.Query(`
-	SELECT 
+	SELECT
 		datname,
-		pg_size_pretty(pg_database_size(pg_database.datname)), 
+		pg_size_pretty(pg_database_size(pg_database.datname)),
 		(pg_stat_file('base/'|| oid ||'/PG_VERSION')).modification AS "created"
 	FROM pg_database
 		WHERE datname LIKE $1
@@ -156,4 +180,43 @@ func (d *Engine) GetSnap(snapName SnapName) (DBname, error) {
 
 func (e *Engine) GetName() string {
 	return e.config.Name
+}
+
+func (e *Engine) GetCommentForDBName(dbName DBname) (*string, error) {
+	dbNameString := string(dbName)
+	return e.GetCommentForDatabase(dbNameString)
+}
+
+func (e *Engine) GetCommentForDatabase(dbName string) (*string, error) {
+	var description *string
+	err := e.db.QueryRow(`
+	SELECT
+		description
+	FROM pg_shdescription
+	JOIN pg_database ON objoid = pg_database.oid
+	WHERE datname = $1`, dbName).Scan(&description)
+	if err == sql.ErrNoRows {
+		// No comment is set, this is fine
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return description, nil
+}
+
+func (e *Engine) WriteCommentForDBName(dbName DBname, comment string) error {
+	dbNameString := string(dbName)
+	return e.WriteCommentForDatabase(dbNameString, comment)
+}
+
+func (e *Engine) WriteCommentForDatabase(dbName string, comment string) error {
+	_, err := e.db.Exec(fmt.Sprintf(`COMMENT ON DATABASE "%s" IS %s`, dbName, pq.QuoteLiteral(comment)))
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
