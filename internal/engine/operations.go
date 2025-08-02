@@ -63,18 +63,18 @@ func (d *Engine) DisableTemplate() (int64, error) {
 func (d *Engine) Snap(snapName SnapName) (int64, error) {
 	dbName := ToDBname(snapName)
 
-	description, err := d.GetCommentForDatabase(d.config.Name)
-	if err != nil {
-		return 0, err
-	}
-
 	execString := fmt.Sprintf(`CREATE DATABASE "%s" TEMPLATE "%s";`, dbName, d.config.Name)
 	createRes, err := d.db.Exec(execString)
 	if err != nil {
 		return 0, err
 	}
+
+	description, err := d.GetCommentForDatabase(d.GetName())
+	if err != nil {
+		return 0, err
+	}
 	if description != nil {
-		err = d.WriteCommentForDBName(dbName, *description)
+		err = d.WriteCommentForDatabase(string(dbName), *description)
 		if err != nil {
 			return 0, err
 		}
@@ -84,12 +84,12 @@ func (d *Engine) Snap(snapName SnapName) (int64, error) {
 
 func (d *Engine) CreateFromSnap(snapName SnapName) (int64, error) {
 	dbName := ToDBname(snapName)
-	description, err := d.GetCommentForDBName(dbName)
+	description, err := d.GetCommentForDatabase(string(dbName))
 	if err != nil {
 		return 0, err
 	}
 
-	execString := fmt.Sprintf(`CREATE DATABASE "%s" TEMPLATE "%s";`, d.config.Name, dbName)
+	execString := fmt.Sprintf(`CREATE DATABASE "%s" TEMPLATE "%s";`, d.GetName(), dbName)
 	res, err := d.db.Exec(execString)
 	if err != nil {
 		return 0, err
@@ -182,11 +182,6 @@ func (e *Engine) GetName() string {
 	return e.config.Name
 }
 
-func (e *Engine) GetCommentForDBName(dbName DBname) (*string, error) {
-	dbNameString := string(dbName)
-	return e.GetCommentForDatabase(dbNameString)
-}
-
 func (e *Engine) GetCommentForDatabase(dbName string) (*string, error) {
 	var description *string
 	err := e.db.QueryRow(`
@@ -205,11 +200,6 @@ func (e *Engine) GetCommentForDatabase(dbName string) (*string, error) {
 	}
 
 	return description, nil
-}
-
-func (e *Engine) WriteCommentForDBName(dbName DBname, comment string) error {
-	dbNameString := string(dbName)
-	return e.WriteCommentForDatabase(dbNameString, comment)
 }
 
 func (e *Engine) WriteCommentForDatabase(dbName string, comment string) error {
