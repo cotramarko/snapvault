@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/cotramarko/snapvault/internal/utils"
 	"os"
 
 	"github.com/cotramarko/snapvault/internal/commands"
@@ -32,14 +33,15 @@ var listCmd = &cobra.Command{
 
 		t := table.NewWriter()
 		t.SetOutputMirror(os.Stdout)
-		t.AppendHeader(table.Row{"Name", "Created", "Size"})
+		t.AppendHeader(table.Row{"Name", "Created", "Size", "Comment"})
 		t.SetColumnConfigs([]table.ColumnConfig{
 			{Name: "Created", AlignHeader: text.AlignCenter, AlignFooter: text.AlignRight},
-			{Name: "Size", AlignHeader: text.AlignRight, Align: text.AlignRight},
+			{Name: "Size", AlignHeader: text.AlignCenter, Align: text.AlignRight},
+			{Name: "Comment", AlignHeader: text.AlignRight, Align: text.AlignLeft},
 		})
 
 		for _, d := range snapshots {
-			t.AppendRow(table.Row{d.SnapName, d.Created, d.Size})
+			t.AppendRow(table.Row{d.SnapName, d.Created, d.Size, utils.TruncateComment(d.Comment)})
 		}
 		t.AppendSeparator()
 		/*
