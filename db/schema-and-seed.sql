@@ -52,4 +52,5 @@ VALUES
     (1, 199.95),
     (2, 299.95);
 
--- Note: Adjust the INSERT statements as necessary to match your application's needs
+-- Add comment on Database
+COMMENT ON DATABASE acmedb IS 'Dummy comment on acmedb';

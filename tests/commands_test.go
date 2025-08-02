@@ -41,6 +41,10 @@ func TestCoreCommands(t *testing.T) {
 		t.Error("Expected 1 snapshot, got", len(res))
 	}
 
+	if res[0].Comment == "" {
+		t.Error("Expected DB comment to be present, but it was blank")
+	}
+
 	if err != nil {
 		t.Error(err)
 	}
